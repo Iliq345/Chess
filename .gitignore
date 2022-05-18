@@ -1,18 +1,25 @@
-# Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
-[Bb]in/
+name: Chess!
 
-# Other files and folders
-.settings/
+on:
+  push:
+    paths:
+      - '**.pgn'
 
-# Executables
-*.swf
-*.air
-*.ipa
-*.apk
+jobs:
+  play:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+    - uses: cschleiden/chess-action@v1
+      with:
+        games: '**/*.pgn'
+
+    - name: Commit changed files
+      uses: stefanzweifel/git-auto-commit-action@v2.3.0
+      with:
+        commit_message: Played some chess!
+        branch: master
+        file_pattern: '*.pgn'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
